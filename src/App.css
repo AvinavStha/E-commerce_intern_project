@@ -1,0 +1,17 @@
+.ant-card-cover img{
+    max-width: 100%;
+    height:auto;
+    width:30%
+}
+
+.ant-card-bordered .ant-card-cover {
+    display: flex;
+    justify-content: center;
+}
+
+.product-card:hover{
+    transform: scale(1.01);
+}
+.ant-card-bordered {
+    border: none !important;
+}
