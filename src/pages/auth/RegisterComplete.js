@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { signInWithEmailLink, getIdTokenResult } from "firebase/auth";
+import {
+  signInWithEmailLink,
+  updatePassword,
+} from "firebase/auth";
 import { toast } from "react-toastify";
 
-const RegisterComplete = ({ history }) => {
+const RegisterComplete = () => {
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForRegistration"));
@@ -41,17 +47,17 @@ const RegisterComplete = ({ history }) => {
         window.localStorage.removeItem("emailForRegistration");
 
         // get user id token
-        const user = auth.currentUser();
-        await user.updatePasssword(password);
-        const idTokenResult = await getIdTokenResult(user);
+        const user = auth.currentUser;
+        await updatePassword(user, password);
+        const idTokenResult = await user.getIdTokenResult();
 
         // redux store
         console.log("user", user, "idTokenResult", idTokenResult);
         // redirect
-        // history.push("/");
+        navigate("/");
       }
 
-      console.log("RESULT", result);
+      //   console.log("RESULT", result);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -63,7 +69,7 @@ const RegisterComplete = ({ history }) => {
       <input
         type="email"
         className="form-control"
-        // disabled
+        disabled
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
