@@ -1,43 +1,61 @@
 import React from "react";
-
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route,useLocation } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import RegisterComplete from "./pages/auth/RegisterComplete";
-import {Layout} from 'antd';
+import {Link} from 'react-router-dom';
+import {Layout,Breadcrumb} from 'antd';
 import FooterPage from "./components/FooterPage";
+import AddToCart from "./pages/AddToCart";
+import {breadcrumbNameMap} from './components/BreadCrumbItem'
 
 const { Header, Content, Footer } = Layout;
 
 function App() {
+  const location = useLocation();
+  const pathSnippets = location.pathname.split('/').filter((i) => i);
+  const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+    return (
+      <Breadcrumb.Item key={url}>
+        <Link to={url}>{breadcrumbNameMap[url]}</Link>
+      </Breadcrumb.Item>
+    );
+  });
+  const breadcrumbItems = [
+    <Breadcrumb.Item key="home">
+      <Link to="/">Home</Link>
+    </Breadcrumb.Item>,
+  ].concat(extraBreadcrumbItems);
+
   return (
     <>
-      <Router>
         <Layout>
           <Header style={{background:'white'}}>
             <Navbar />
           </Header>
           
-          <ToastContainer />
+          <Breadcrumb style={{ padding: '0 50px',background:'white' }}>{breadcrumbItems}</Breadcrumb>
+          <ToastContainer/>
           <Content style={{ padding: '0 50px',background:'white' }}>
-          <Routes>
-            <Route exact path="/" element={<Home />}></Route>
-            <Route exact path="/login" element={<Login />}></Route>
-            <Route exact path="/register" element={<Register />}></Route>
-            <Route exact path="/register/complete" element={<RegisterComplete />}></Route>
-          </Routes>
+            <Routes>
+              <Route exact path="/" element={<Home />}></Route>
+              <Route exact path="/login" element={<Login />}></Route>
+              <Route exact path="/register" element={<Register />}></Route>
+              <Route exact path="/register/complete" element={<RegisterComplete />}></Route>
+              <Route exact path="/add-to-cart" element={<AddToCart/>}></Route>
+            </Routes>
           </Content>
+          
           <Footer style={{background:'red'}}>
             <FooterPage/>
           </Footer>
         </Layout>
-      </Router>
     </>
   );
 }

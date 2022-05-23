@@ -1,3 +1,7 @@
+html{
+    font-size: 62.5%;
+}
+
 .ant-card-cover img{
     max-width: 100%;
     height:auto;
@@ -7,11 +11,27 @@
 .ant-card-bordered .ant-card-cover {
     display: flex;
     justify-content: center;
+    padding-top: 1rem;
 }
 
 .product-card:hover{
-    transform: scale(1.01);
+    transform: scale(1.005);
 }
-.ant-card-bordered {
-    border: none !important;
+
+.product-info{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+}
+
+.product-info input{
+    width: 3rem;
+    text-align: center;
+}
+.price-detail{
+    color:rgba(0,0,0,.45);
+}
+
+.add-to-cart{
+    margin-top: 1rem;
 }
