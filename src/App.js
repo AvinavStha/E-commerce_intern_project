@@ -3,16 +3,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route,useLocation } from "react-router-dom";
 import "./App.css";
-import Navbar from "./components/Navbar/Navbar";
-import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+import Home from "./pages/UserPanel/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import RegisterComplete from "./pages/auth/RegisterComplete";
 import {Link} from 'react-router-dom';
 import {Layout,Breadcrumb} from 'antd';
 import FooterPage from "./components/FooterPage";
-import AddToCart from "./pages/AddToCart";
+import AddToCart from "./pages/UserPanel/AddToCart";
 import {breadcrumbNameMap} from './components/BreadCrumbItem'
+import { AdminLoginPage } from "./pages/AdminPanel/AdminLoginPage";
 
 const { Header, Content, Footer } = Layout;
 
@@ -27,12 +28,26 @@ function App() {
       </Breadcrumb.Item>
     );
   });
+  
   const breadcrumbItems = [
     <Breadcrumb.Item key="home">
       <Link to="/">Home</Link>
     </Breadcrumb.Item>,
   ].concat(extraBreadcrumbItems);
 
+  if(location.pathname === "/admin"){
+    return(
+      <Layout>
+        <Header style={{background:'white'}}>
+          <Navbar />
+        </Header>
+        <Routes>
+          <Route path="/admin" element={<AdminLoginPage/>}></Route>
+        </Routes>
+      </Layout>
+    )
+  }
+  
   return (
     <>
         <Layout>

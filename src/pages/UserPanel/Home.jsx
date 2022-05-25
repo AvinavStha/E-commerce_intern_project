@@ -1,9 +1,9 @@
 import React from "react";
 import { Card } from "antd";
-import bottle from "../images/1.png"
+import bottle from "../../images/1.png"
 import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment } from "../redux/actions/actions";
+import { decrement, increment } from "../../redux/actions/actions";
 
 const { Meta } = Card;
 
