@@ -8,12 +8,11 @@ import Home from "./pages/auth/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import RegisterComplete from "./pages/auth/RegisterComplete";
-
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
 
 const App = () => {
-
   const dispatch = useDispatch();
   //to check firebase auth state
   useEffect(() => {
@@ -22,17 +21,17 @@ const App = () => {
         const idTokenResult = await user.getIdTokenResult();
         console.log("user", user);
         dispatch({
-          type:"LOGGED_IN_USER",
+          type: "LOGGED_IN_USER",
           payload: {
             email: user.email,
-            token : idTokenResult.token,
-          }
-        })
+            token: idTokenResult.token,
+          },
+        });
       }
     });
     //cleanup
     return () => unsubscribe();
-    }, []);
+  }, []);
 
   return (
     <>
@@ -48,6 +47,8 @@ const App = () => {
             path="/register/complete"
             element={<RegisterComplete />}
           ></Route>
+          <Route exact path="/forgot/password" element={<ForgotPassword/>}></Route>
+
         </Routes>
       </Router>
     </>

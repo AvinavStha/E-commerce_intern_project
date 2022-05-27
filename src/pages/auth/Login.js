@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth, googleAuthProvider } from "../../firebase";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Button } from "antd";
 import { MailOutlined, GoogleOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { async } from "@firebase/util";
 
 const Login = () => {
   const [email, setEmail] = useState("avi.shrestha.775@gmail.com");
-  const [password, setPassword] = useState("avinav");
+  const [password, setPassword] = useState("Avinav1234");
   const [loading, setLoading] = useState("");
+  const { user } = useSelector((state) => ({ ...state }));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.token) navigate("/");
+  }, [user]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,6 +128,10 @@ const Login = () => {
           >
             Login with Google
           </Button>
+
+          <Link to="/forgot/password" className="float-right text-danger">
+          Forgot Password
+          </Link>
         </div>
       </div>
     </div>
