@@ -14,8 +14,9 @@ import FooterPage from "./components/FooterPage";
 import AddToCart from "./pages/UserPanel/AddToCart";
 import {breadcrumbNameMap} from './components/BreadCrumbItem'
 import { AdminLoginPage } from "./pages/AdminPanel/AdminLoginPage";
+import { AdminPage } from './pages/AdminPanel/AdminPage';
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer} = Layout;
 
 function App() {
   const location = useLocation();
@@ -35,16 +36,16 @@ function App() {
     </Breadcrumb.Item>,
   ].concat(extraBreadcrumbItems);
 
-  if(location.pathname === "/admin"){
+  if(pathSnippets[0] === "admin"){
     return(
-      <Layout>
-        <Header style={{background:'white'}}>
-          <Navbar />
-        </Header>
-        <Routes>
-          <Route path="/admin" element={<AdminLoginPage/>}></Route>
-        </Routes>
-      </Layout>
+        <Layout style={{height:"90vh"}}>
+          <Content>
+            <Routes>
+              <Route path="/admin" element={<AdminLoginPage/>}></Route>
+              <Route path="/admin/admin-page" element={<AdminPage/>}></Route>
+            </Routes>
+          </Content>
+        </Layout>
     )
   }
   

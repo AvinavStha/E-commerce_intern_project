@@ -7,7 +7,14 @@ export const increment = () => {
 }
 
 export const decrement = () => {
-    return {
-        type :ActionType.DECREMENT
-    }
+  return {
+      type :ActionType.DECREMENT
   }
+}
+
+export const toggleContent = (id) => {
+  return {
+      type :ActionType.TOGGLECONTENT,
+      payload: {id}
+  }
+}

@@ -7,10 +7,24 @@ html{
     font-size: 62.5%;
 }
 
+.ant-layout-header{
+    top: 0;
+    position: sticky;
+    z-index: 2;
+}
+
 .ant-card-cover img{
     max-width: 100%;
     height:auto;
     width:30%
+}
+
+.ant-layout-sider-zero-width-trigger{
+    top:0 !important;
+    font-size: 3rem !important;
+    right: -5rem !important;
+    height: 6rem !important;
+    width: 5rem !important;
 }
 
 .ant-card-bordered .ant-card-cover {
@@ -62,6 +76,16 @@ html{
 
 .login-form-button{
     width: 100%;
+}
+
+.admin-product-card{
+    margin-top: 1.5rem !important;
+    border-radius: 1rem !important;
+}
+
+.ant-menu-item-selected{
+    color: coral !important;
+    background-color: transparent !important;
 }
 
 @media only screen and (min-width:1025) and (max-width:1200){

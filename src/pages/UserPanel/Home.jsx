@@ -8,7 +8,8 @@ import { decrement, increment } from "../../redux/actions/actions";
 const { Meta } = Card;
 
 const Home = () => {
-  const value = useSelector(state => state.incrementDecrement)
+  const value = useSelector(state => state.incrementDecrement.count)
+  console.log(value)
   const dispatch = useDispatch()
 
   return (

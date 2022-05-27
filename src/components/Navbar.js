@@ -9,7 +9,49 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-const { SubMenu, Item } = Menu;
+const items = [
+  {
+    label: (
+      <Link to="/">Home</Link>
+    ),
+    key: 'home',
+    icon: <AppstoreOutlined />,
+  },
+  {
+    label: (
+      <Link to="/register">Register</Link>
+    ),
+    key: 'register',
+    icon: <UserAddOutlined />,
+  },
+  {
+    label: (
+      <Link to="/login">Login</Link>
+    ),
+    key: 'login',
+    icon: <UserOutlined />,
+  },
+  {
+    label: 'Username',
+    key: 'SubMenu',
+    children: [
+      {
+        label: 'Option 1',
+        key: 'setting:1',
+      },
+      {
+        label: 'Option 2',
+        key: 'setting:2',
+      },
+    ],   
+  },
+  {
+    label: (
+      <Link to="/add-to-cart"><ShoppingCartOutlined /></Link>
+    ),
+    key: 'add-to-cart',
+  },
+];
 
 const Navbar = () => {
   const [current, setCurrent] = useState("home");
@@ -27,28 +69,7 @@ const Navbar = () => {
       </Col>
 
       <Col span={18}>
-        <Menu onClick={handleClick} mode="horizontal" selectedKeys={[current]}>
-          <Item key="home" icon={<AppstoreOutlined />}>
-            <Link to="/">Home</Link>
-          </Item>
-
-          <Item key="register" icon={<UserAddOutlined />} className="float-right">
-            <Link to="/register">Register</Link>
-          </Item>
-
-          <Item key="login" icon={<UserOutlined />} className="float-right">
-            <Link to="/login">Login</Link>
-          </Item>
-
-          <SubMenu title="Username" key="username">
-            <Item key="setting:1">Option 1</Item>
-            <Item key="setting:2">Option 2</Item>
-          </SubMenu>
-
-          <Item key="add-to-cart" className="float-left">
-            <Link to="/add-to-cart"><ShoppingCartOutlined /></Link>
-          </Item>
-        </Menu>
+        <Menu onClick={handleClick} mode="horizontal" selectedKeys={[current]} items={items}/>
       </Col>
     </Row>
   );

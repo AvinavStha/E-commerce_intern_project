@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input ,Card} from 'antd';
-import { AdminPage } from '../pages/AdminPanel/AdminPage';
+import { Link } from 'react-router-dom';
 
 export const FormPage = () =>{
     const onFinish = (values) => {
@@ -9,7 +9,6 @@ export const FormPage = () =>{
 
     const onLogin = ()=>{
         console.log("Logged in successfully");
-        <AdminPage/>
     }
 
     return (
@@ -61,7 +60,7 @@ export const FormPage = () =>{
                     <Button type="primary" htmlType="submit" className="login-form-button"
                     onClick={onLogin}
                     >
-                        Log in
+                        <Link to="/admin/admin-page">Log in</Link>
                     </Button>
                     Or <a href="/">register now!</a>
                 </Form.Item>
