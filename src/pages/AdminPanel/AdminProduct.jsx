@@ -8,14 +8,14 @@ const { Search } = Input;
 export const AdminProduct = () => {
     const onSearch = (value) => console.log(value);
     const [showForm, setShowForm] = useState(false)
-    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleOk = () => {
-        setConfirmLoading(true);
+        setLoading(true);
         setTimeout(() => {
+            setLoading(false);
             setShowForm(false);
-            setConfirmLoading(false);
-        }, 2000);
+        }, 3000);
     };
 
     const handleCancel = () => {
@@ -46,9 +46,23 @@ export const AdminProduct = () => {
                         <Modal
                             title="Add new Products"
                             visible={showForm}
-                            onOk={handleOk}
-                            confirmLoading={confirmLoading}
                             onCancel={handleCancel}
+                            footer={[
+                                <Button key="reset" onClick={handleCancel}>
+                                    Reset
+                                </Button>,
+                                <Button key="cancel" type="danger" onClick={handleCancel}>
+                                    Cancel
+                                </Button>,
+                                <Button
+                                    key="submit"
+                                    style={{ background: 'green', color: 'white' }}
+                                    onClick={handleOk}
+                                    loading={loading}
+                                >
+                                    Add Products
+                                </Button>
+                            ]}
                         >
                             <AddEditProductDetail />
                         </Modal>

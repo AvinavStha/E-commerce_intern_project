@@ -18,3 +18,10 @@ export const toggleContent = (id) => {
       payload: {id}
   }
 }
+
+export const addProductInfo = (id) => {
+  return {
+      type :ActionType.ADDPRODUCTINFO,
+      payload: {id}
+  }
+}

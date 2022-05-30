@@ -6,6 +6,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyANW46oGhvETM9AEAZfKfPVYepVc_g7Zuc",
   authDomain: "e-commerce-41570.firebaseapp.com",
+  databaseURL: "https://e-commerce-41570-default-rtdb.firebaseio.com",
   projectId: "e-commerce-41570",
   storageBucket: "e-commerce-41570.appspot.com",
   messagingSenderId: "778363496846",
