@@ -1,8 +1,11 @@
-import React from "react";
+import React,{useEffect} from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route,useLocation } from "react-router-dom";
 import "./App.css";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import { auth } from "./firebase";
+import { useDispatch } from "react-redux";
 import Navbar from "./components/Navbar";
 import Home from "./pages/UserPanel/Home";
 import Login from "./pages/auth/Login";
@@ -19,6 +22,26 @@ import { AdminPage } from './pages/AdminPanel/AdminPage';
 const { Header, Content, Footer} = Layout;
 
 function App() {
+  const dispatch = useDispatch();
+  //to check firebase auth state
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const idTokenResult = await user.getIdTokenResult();
+        console.log("user", user);
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            email: user.email,
+            token: idTokenResult.token,
+          },
+        });
+      }
+    });
+    //cleanup
+    return () => unsubscribe();
+  }, []);
+
   const location = useLocation();
   const pathSnippets = location.pathname.split('/').filter((i) => i);
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
@@ -64,6 +87,7 @@ function App() {
               <Route exact path="/login" element={<Login />}></Route>
               <Route exact path="/register" element={<Register />}></Route>
               <Route exact path="/register/complete" element={<RegisterComplete />}></Route>
+              <Route exact path="/forgot/password" element={<ForgotPassword/>}></Route>
               <Route exact path="/add-to-cart" element={<AddToCart/>}></Route>
             </Routes>
           </Content>
@@ -74,6 +98,6 @@ function App() {
         </Layout>
     </>
   );
-}
+};
 
 export default App;
