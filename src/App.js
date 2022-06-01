@@ -62,6 +62,7 @@ function App() {
   if(pathSnippets[0] === "admin"){
     return(
         <Layout style={{height:"90vh"}}>
+          <ToastContainer/>
           <Content>
             <Routes>
               <Route path="/admin" element={<AdminLoginPage/>}></Route>

@@ -1,31 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AdminSider } from "../../components/AdminSider";
 import { useSelector } from 'react-redux';
 import { AdminContent } from './AdminContent';
-import { Layout } from 'antd';
+import { Layout, Button, Drawer } from 'antd';
+import useResponsive from '../../components/useResponsive';
+import { MenuOutlined } from "@ant-design/icons";;
 const { Header, Content, Sider } = Layout;
 
 export const AdminPage = () => {
     const content = useSelector(state => state.incrementDecrement.index)
+    const [visible, setVisible] = useState(false)
+
+    const breakpoint = 991;
+    const width = useResponsive()
+
     return (
-        <Layout hasSider>
+        <Layout>
             <Sider
-                style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    paddingTop: '1.5rem'
-                }}
+                breakpoint="lg"
+                collapsedWidth="0"
+                trigger={null}
+                className={`${width > breakpoint ? 'slider fixed' : 'slider'}`}
             >
                 <AdminSider />
             </Sider>
+
             <Layout
-                style={{
-                    marginLeft: 200,
-                }}
+                className={`${width > breakpoint && 'admin-layout'}`}
             >
                 <Header
                     style={{
@@ -33,6 +34,26 @@ export const AdminPage = () => {
                     }}
                 >
                     <h1 style={{ textAlign: 'center', color: "white" }}>AdminPage</h1>
+                    {width <= breakpoint &&
+                        <Button
+                            style={{
+                                backgroundColor: '#001529',
+                                color: 'white',
+                                bottom: '50px',
+                                right: '30px',
+                                border: 'none'
+                            }}
+                            icon={<MenuOutlined style={{ fontSize: '2rem' }} />}
+                            onClick={() => setVisible(true)}
+                        />
+                    }
+                    <Drawer
+                        placement="left"
+                        onClick={() => setVisible(false)}
+                        visible={visible}
+                    >
+                        <AdminSider />
+                    </Drawer>
                 </Header>
                 <Content
                     style={{

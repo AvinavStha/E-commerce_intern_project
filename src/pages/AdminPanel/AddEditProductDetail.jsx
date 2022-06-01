@@ -1,5 +1,11 @@
-import { Form, Input, InputNumber, Select, Button, Upload, message, Row } from 'antd';
+import { Form, Input, Select, Button, Upload, message, Row } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
+import { useState } from 'react';
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from 'react-redux';
+import { addProduct, getProduct } from '../../redux/actions/productActions';
+import { toast } from 'react-toastify';
+
 const { Option } = Select;
 const layout = {
     labelCol: {
@@ -12,31 +18,67 @@ const layout = {
     },
 };
 
-export const AddEditProductDetail = () => {
-    const [form] = Form.useForm();
+export const AddEditProductDetail = ({ showForm }) => {
 
-    const onFinish = (values) => {
-        console.log(values);
-    };
+    const [form] = Form.useForm();
+    const [state, setState] = useState({
+        id: Date.now(),
+        image: "",
+        name: "",
+        description: "",
+        brand: "",
+        type: "",
+        price: "",
+        stock: "",
+    })
+    const dispatch = useDispatch()
+
+    const { name, brand, type, description, price, stock } = state
+
     const normFile = (e) => {
-        console.log('Upload event:', e);
         if (Array.isArray(e)) {
             return e;
         }
         return e?.fileList;
     };
+
+    const addEditProduct = (e) => {
+        e.preventDefault()
+        if (!name || !brand || !stock || !price) {
+            toast.error("Required field cannot be empty", {
+                icon: "😠"
+            });
+        }
+        else {
+            toast.success("Data added successfully", {
+                icon: "😄"
+            });
+            dispatch(addProduct(state))
+            showForm(false)
+            dispatch(getProduct())
+            setState({})
+        }
+    }
+
+    const handleInputChange = (e) => {
+        let { name, value } = e.target
+        setState({ ...state, [name]: value })
+    }
+
+    const handleReset = () => {
+        console.log("reset")
+        setState({})
+    };
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-
         if (!isJpgOrPng) {
             message.error('You can only upload JPG/PNG file!');
         }
-
         return isJpgOrPng || Upload.LIST_IGNORE;
     };
 
     return (
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name="control-hooks" onFinish={addEditProduct}>
             <Form.Item
                 name="upload"
                 label="Upload"
@@ -49,10 +91,16 @@ export const AddEditProductDetail = () => {
                 ]}
             >
                 <Upload name="logo"
-                    action="/upload.do"
                     listType="picture"
                     beforeUpload={beforeUpload}
-                    maxCount={1}>
+                    maxCount={1}
+                    onChange={(e) => {
+                        if (Array.isArray(e)) {
+                            return e;
+                        }
+                        return e?.fileList;
+                    }}
+                >
                     <Button icon={<UploadOutlined />}>Upload Product Image</Button>
                 </Upload>
             </Form.Item>
@@ -65,7 +113,11 @@ export const AddEditProductDetail = () => {
                     },
                 ]}
             >
-                <Input />
+                <Input
+                    onChange={handleInputChange}
+                    name='name'
+                    value={name}
+                />
             </Form.Item>
 
             <Row justify='space-around'>
@@ -79,8 +131,13 @@ export const AddEditProductDetail = () => {
                     ]}
                 >
                     <Select
+                        labelInValue
                         placeholder="Select a brand"
                         style={{ width: 130 }}
+                        onChange={(e) => { setState({ ...state, brand: e.value }) }}
+                        label='brand'
+                        name='brand'
+                        value={brand}
                     >
                         <Option value="beer">Beer</Option>
                         <Option value="rum">Rum</Option>
@@ -96,8 +153,13 @@ export const AddEditProductDetail = () => {
                     label="Type"
                 >
                     <Select
+                        labelInValue
                         placeholder="Select a type of product"
                         style={{ width: 130 }}
+                        onChange={(e) => { setState({ ...state, type: e.value }) }}
+                        name='type'
+                        label='type'
+                        value={type}
                     >
                         <Option value="imported">Imported</Option>
                         <Option value="domestic">Domestic</Option>
@@ -109,7 +171,10 @@ export const AddEditProductDetail = () => {
                 name="product-description"
                 label="Description"
             >
-                <Input.TextArea />
+                <Input.TextArea
+                    onChange={handleInputChange}
+                    name='description'
+                    value={description} />
             </Form.Item>
 
             <Row justify='space-around'>
@@ -122,7 +187,10 @@ export const AddEditProductDetail = () => {
                         },
                     ]}
                 >
-                    <InputNumber style={{ width: 140 }} />
+                    <Input style={{ width: 140 }}
+                        onChange={handleInputChange}
+                        name='price'
+                        value={price} />
                 </Form.Item>
 
                 <Form.Item
@@ -134,8 +202,24 @@ export const AddEditProductDetail = () => {
                         },
                     ]}
                 >
-                    <InputNumber style={{ width: 140 }} />
+                    <Input style={{ width: 140 }}
+                        onChange={handleInputChange}
+                        name='stock'
+                        value={stock} />
                 </Form.Item>
+            </Row>
+            <Row justify='space-evenly'>
+                <Button key="reset" onClick={handleReset}>
+                    Reset
+                </Button>
+                <Button
+                    key="submit"
+                    style={{ background: 'green', color: 'white' }}
+                    onClick={addEditProduct}
+                // loading={loading}
+                >
+                    Add Products
+                </Button>
             </Row>
         </Form>
     );

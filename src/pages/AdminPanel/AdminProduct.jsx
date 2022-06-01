@@ -7,22 +7,12 @@ const { Search } = Input;
 
 export const AdminProduct = () => {
     const onSearch = (value) => console.log(value);
-    const [showForm, setShowForm] = useState(false)
-    const [loading, setLoading] = useState(false);
-
-    const handleOk = () => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setShowForm(false);
-        }, 3000);
-    };
+    const [showForm, setShowForm] = useState(false);
 
     const handleCancel = () => {
         console.log('Clicked cancel button');
         setShowForm(false);
     };
-
 
     const displayForm = () => {
         showForm ? setShowForm(false) : setShowForm(true)
@@ -47,26 +37,10 @@ export const AdminProduct = () => {
                             title="Add new Products"
                             visible={showForm}
                             onCancel={handleCancel}
-                            footer={[
-                                <Button key="reset" onClick={handleCancel}>
-                                    Reset
-                                </Button>,
-                                <Button key="cancel" type="danger" onClick={handleCancel}>
-                                    Cancel
-                                </Button>,
-                                <Button
-                                    key="submit"
-                                    style={{ background: 'green', color: 'white' }}
-                                    onClick={handleOk}
-                                    loading={loading}
-                                >
-                                    Add Products
-                                </Button>
-                            ]}
+                            footer={null}
                         >
-                            <AddEditProductDetail />
+                            <AddEditProductDetail showForm={setShowForm} />
                         </Modal>
-
                     }
                 </Col>
             </Row>

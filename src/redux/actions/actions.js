@@ -19,9 +19,3 @@ export const toggleContent = (id) => {
   }
 }
 
-export const addProductInfo = (id) => {
-  return {
-      type :ActionType.ADDPRODUCTINFO,
-      payload: {id}
-  }
-}

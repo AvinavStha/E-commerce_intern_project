@@ -19,14 +19,6 @@ html{
     width:30%
 }
 
-.ant-layout-sider-zero-width-trigger{
-    top:0 !important;
-    font-size: 3rem !important;
-    right: -5rem !important;
-    height: 6rem !important;
-    width: 5rem !important;
-}
-
 .ant-card-bordered .ant-card-cover {
     display: flex;
     justify-content: center;
@@ -88,8 +80,28 @@ html{
     background-color: transparent !important;
 }
 
-.ant-modal-body{
-    padding-bottom: 0 !important;
+.fixed{
+    overflow: auto;
+    position: fixed !important;
+}
+.slider{ 
+    height: 100vh;
+    left: 0;
+    top: 0; 
+    bottom: 0;
+    padding-top: 1.1rem;
+}
+.ant-drawer-header,.ant-drawer-header-title {
+    display: none !important;
+}
+
+.ant-drawer-body {
+    padding: 0 !important;
+    background: #001529;
+}
+
+.admin-layout{
+    margin-left: 20rem;
 }
 
 @media only screen and (min-width:1025) and (max-width:1200){
