@@ -104,6 +104,13 @@ html{
     margin-left: 20rem;
 }
 
+.product-form{
+    margin: 0 3rem 0;
+}
+.product-form .ant-row{ 
+    margin-bottom: 1.8rem;
+}
+
 @media only screen and (min-width:1025) and (max-width:1200){
     html{
         font-size: 50%;

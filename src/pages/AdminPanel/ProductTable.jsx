@@ -8,17 +8,11 @@ import { getProduct, deleteProduct, getSingleProduct } from '../../redux/actions
 
 const ProductTable = ({ showForm }) => {
     const products = useSelector(state => state.productReducer.product_details)
-    const singleProduct = useSelector(state => state.productReducer.single_produc)
 
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getProduct())
     }, [])
-
-    useEffect(() => {
-        dispatch(getProduct())
-    }, [singleProduct])
-
 
     const productDelete = (id) => {
         if (window.confirm("Are you sure you want to delete contact?")) {

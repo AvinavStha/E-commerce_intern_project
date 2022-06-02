@@ -52,6 +52,18 @@ const deleteProductFailed = () => ({
     type :ActionType.REMOVE_PRODUCT_FAIL
 })
 
+const editProductStart = () => ({
+    type :ActionType.EDIT_PRODUCT
+})
+
+const editProductSuccess = () => ({
+    type :ActionType.EDIT_PRODUCT_SUCCESS
+})
+
+const editProductFailed = () => ({
+    type :ActionType.EDIT_PRODUCT_FAILED
+})
+
 export const getProduct = ()=> async (dispatch)=>{
     dispatch(getProductsStart())
     
@@ -102,16 +114,13 @@ export const deleteProduct = (id)=> async (dispatch)=>{
     }
 }
 
-export const editProduct = (id,updates) => {
-    return {
-        type :ActionType.EDIT_PRODUCT,
-        payload: {id,updates}
-    }
-}
+export const editProduct = (id)=> async (dispatch)=>{
+    dispatch(editProductStart())
 
-export const editProductSuccess = (updates) => {
-    return {
-        type :ActionType.EDIT_PRODUCT_SUCCESS,
-        payload: {updates}
+    await deleteDoc(doc(firestore_db,"products",`${id}`))
+    try {
+        dispatch(editProductSuccess())
+    } catch (error) {
+        dispatch(editProductFailed(error))
     }
 }
