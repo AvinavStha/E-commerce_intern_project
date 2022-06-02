@@ -1,18 +1,31 @@
 import { ActionType } from "./ActionType"
 import {firestore_db} from '../../firebase'
-import { doc,getDocs, collection, setDoc, deleteDoc } from "firebase/firestore"
+import { doc,getDocs,getDoc, collection, setDoc, deleteDoc } from "firebase/firestore"
 
-const getProductStart = () => ({
+const getProductsStart = () => ({
     type :ActionType.GET_PRODUCT,
 })
 
-const getProductSuccess = (products) => ({
+const getProductsSuccess = (products) => ({
     type :ActionType.GET_PRODUCT_SUCCESS,
     payload: products
 })
 
-const getProductFailed = () => ({
+const getProductsFailed = () => ({
     type :ActionType.GET_PRODUCT_FAIL
+})
+
+const getProductStart = () => ({
+    type :ActionType.GET_SINGLE_PRODUCT
+})
+
+const getProductSuccess = (product) => ({
+    type :ActionType.GET_SINGLE_PRODUCT_SUCCESS,
+    payload: product
+})
+
+const getProductFailed = () => ({
+    type :ActionType.GET_SINGLE_PRODUCT_FAIL
 })
 
 const addProductStart = () => ({
@@ -40,25 +53,30 @@ const deleteProductFailed = () => ({
 })
 
 export const getProduct = ()=> async (dispatch)=>{
-    dispatch(getProductStart())
+    dispatch(getProductsStart())
     
     const getProducts = await getDocs(collection(firestore_db, "products"))
-    // const product = getProducts.docs.map(doc=>doc.data())  
+    // const product = getProductss.docs.map(doc=>doc.data())  
     const product = []
     getProducts.forEach((doc)=>{
         product.push({...doc.data(),id:doc.id})
     })
     try {
-        if(product){
-            dispatch(getProductSuccess(product))
-        }
-        else{
-            dispatch(getProductSuccess({}))
-        } 
+        dispatch(getProductsSuccess(product))
+    } catch (error) {
+        dispatch(getProductsFailed(error))
+    }
+}
+
+export const getSingleProduct = (id)=> async (dispatch)=>{
+    dispatch(getProductStart())
+    
+    const singleProduct = await getDoc(doc(firestore_db, "products",`${id}`));
+    try {
+        dispatch(getProductSuccess(singleProduct.data()))
     } catch (error) {
         dispatch(getProductFailed(error))
     }
-
 }
 
 export const addProduct = (product)=> async (dispatch)=>{
@@ -76,9 +94,9 @@ export const addProduct = (product)=> async (dispatch)=>{
 export const deleteProduct = (id)=> async (dispatch)=>{
     dispatch(deleteProductStart())
 
-    const deleteProduct = await deleteDoc(doc(firestore_db,"products",`${id}`))
+    await deleteDoc(doc(firestore_db,"products",`${id}`))
     try {
-        dispatch(deleteProductSuccess(deleteProduct))
+        dispatch(deleteProductSuccess())
     } catch (error) {
         dispatch(deleteProductFailed(error))
     }

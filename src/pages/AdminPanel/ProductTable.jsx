@@ -4,15 +4,36 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from 'react-toastify';
-import { getProduct, deleteProduct } from '../../redux/actions/productActions';
+import { getProduct, deleteProduct, getSingleProduct } from '../../redux/actions/productActions';
 
-const ProductTable = () => {
+const ProductTable = ({ showForm }) => {
     const products = useSelector(state => state.productReducer.product_details)
+    const singleProduct = useSelector(state => state.productReducer.single_produc)
 
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getProduct())
     }, [])
+
+    useEffect(() => {
+        dispatch(getProduct())
+    }, [singleProduct])
+
+
+    const productDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete contact?")) {
+            dispatch(deleteProduct(id));
+            toast.success("Product deleted successfully", {
+                icon: "😄"
+            });
+            dispatch(getProduct())
+        }
+    }
+
+    const productEdit = (id) => {
+        dispatch(getSingleProduct(id))
+        showForm(true)
+    }
 
     const columns = [
         {
@@ -55,15 +76,13 @@ const ProductTable = () => {
             key: 'action',
             render: (_, product) => (
                 <Space size="middle">
-                    <EditOutlined style={{ cursor: 'pointer' }} onClick={() => { console.log(product.key) }} />
+                    <EditOutlined
+                        style={{ cursor: 'pointer', color: 'green' }}
+                        onClick={() => productEdit(product.key)}
+                    />
                     <DeleteOutlined
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                            dispatch(deleteProduct(product.key));
-                            toast.success("Product deleted successfully", {
-                                icon: "😄"
-                            });
-                        }} />
+                        style={{ cursor: 'pointer', color: 'red' }}
+                        onClick={() => productDelete(product.key)} />
                 </Space>
             ),
         },

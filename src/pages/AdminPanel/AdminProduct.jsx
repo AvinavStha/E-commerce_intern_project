@@ -46,7 +46,7 @@ export const AdminProduct = () => {
             </Row>
 
             <Card className='admin-product-card'>
-                <ProductTable />
+                <ProductTable showForm={setShowForm} />
             </Card>
         </>
     )

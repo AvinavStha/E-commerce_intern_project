@@ -56,7 +56,16 @@ export const AddEditProductDetail = ({ showForm }) => {
             dispatch(addProduct(state))
             showForm(false)
             dispatch(getProduct())
-            setState({})
+            setState({
+                id: "",
+                image: "",
+                name: "",
+                description: "",
+                brand: "",
+                type: "",
+                price: "",
+                stock: "",
+            })
         }
     }
 
@@ -67,7 +76,16 @@ export const AddEditProductDetail = ({ showForm }) => {
 
     const handleReset = () => {
         console.log("reset")
-        setState({})
+        setState({
+            id: "",
+            image: "",
+            name: "",
+            description: "",
+            brand: "",
+            type: "",
+            price: "",
+            stock: "",
+        })
     };
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -190,6 +208,7 @@ export const AddEditProductDetail = ({ showForm }) => {
                     <Input style={{ width: 140 }}
                         onChange={handleInputChange}
                         name='price'
+                        prefix='Rs'
                         value={price} />
                 </Form.Item>
 

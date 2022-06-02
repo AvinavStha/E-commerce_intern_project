@@ -2,6 +2,7 @@ import { ActionType } from "../actions/ActionType";
 
 const initialState = {
     product_details :[],
+    single_product:{},
     loading:false,
     error:null
 }
@@ -22,6 +23,26 @@ export const productReducer = (state = initialState ,actions)=>{
             }
         
         case ActionType.GET_PRODUCT_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error: actions.payload 
+            }
+
+        case ActionType.GET_SINGLE_PRODUCT:
+            return{
+                ...state,
+                loading:true
+            }
+            
+        case ActionType.GET_SINGLE_PRODUCT_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                single_product: actions.payload
+            }
+            
+        case ActionType.GET_SINGLE_PRODUCT_FAIL:
             return{
                 ...state,
                 loading:false,
