@@ -111,6 +111,49 @@ html{
     margin-bottom: 1.8rem;
 }
 
+.image{
+    border: 1px solid #ccc;
+    height: 12vh;
+    width: 14vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.upload{
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height:100%;
+    width:100%
+}
+
+.flex{
+    display: flex;
+}
+
+.image-delete{
+    cursor: pointer;
+    display: flex !important;
+    align-self: flex-end;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload-image{  
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+
 @media only screen and (min-width:1025) and (max-width:1200){
     html{
         font-size: 50%;

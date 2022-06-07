@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from 'react-toastify';
 import { getProduct, deleteProduct, getSingleProduct } from '../../redux/actions/productActions';
 
-const ProductTable = ({ showForm }) => {
+const ProductTable = ({ showForm, setToggleAddEdit, setEditId }) => {
     const products = useSelector(state => state.productReducer.product_details)
 
     const dispatch = useDispatch()
@@ -26,7 +26,9 @@ const ProductTable = ({ showForm }) => {
 
     const productEdit = (id) => {
         dispatch(getSingleProduct(id))
+        setEditId(id)
         showForm(true)
+        setToggleAddEdit(false)
     }
 
     const columns = [
@@ -84,6 +86,7 @@ const ProductTable = ({ showForm }) => {
 
     const product = products.map((product) => ({
         key: product.id,
+        image: <img src={product.image} alt='not found' style={{ maxWidth: '100%' }} />,
         name: product.name,
         brand: product.brand,
         type: product.type,

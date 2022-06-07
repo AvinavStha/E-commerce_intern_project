@@ -1,6 +1,6 @@
 import { ActionType } from "./ActionType"
 import {firestore_db} from '../../firebase'
-import { doc,getDocs,getDoc, collection, setDoc, deleteDoc } from "firebase/firestore"
+import { doc,getDocs,getDoc, collection, setDoc, deleteDoc, updateDoc } from "firebase/firestore"
 
 const getProductsStart = () => ({
     type :ActionType.GET_PRODUCT,
@@ -114,12 +114,12 @@ export const deleteProduct = (id)=> async (dispatch)=>{
     }
 }
 
-export const editProduct = (id)=> async (dispatch)=>{
+export const editProduct = (id,product)=> async (dispatch)=>{
     dispatch(editProductStart())
 
-    await deleteDoc(doc(firestore_db,"products",`${id}`))
+    const editProduct = await updateDoc(doc(firestore_db,"products",`${id}`),product)
     try {
-        dispatch(editProductSuccess())
+        dispatch(editProductSuccess(editProduct))
     } catch (error) {
         dispatch(editProductFailed(error))
     }

@@ -51,6 +51,7 @@ export const productReducer = (state = initialState ,actions)=>{
 
         case ActionType.ADD_PRODUCT:
         case ActionType.REMOVE_PRODUCT:
+        case ActionType.EDIT_PRODUCT:
             return {
                 ...state,
                 loading:true,
@@ -58,6 +59,7 @@ export const productReducer = (state = initialState ,actions)=>{
 
         case ActionType.ADD_PRODUCT_SUCCESS:
         case ActionType.REMOVE_PRODUCT_SUCCESS:
+        case ActionType.EDIT_PRODUCT_SUCCESS:
             return {
                 ...state,
                 loading:false,
@@ -65,32 +67,12 @@ export const productReducer = (state = initialState ,actions)=>{
         
         case ActionType.ADD_PRODUCT_FAIL:
         case ActionType.REMOVE_PRODUCT_FAIL:
+        case ActionType.EDIT_PRODUCT_FAILED:
             return{
                 ...state,
                 loading:false,
                 error: actions.payload 
             }
-
-        // case ActionType.REMOVE_PRODUCT:
-        //     return {
-        //         index :  id
-        //     }
-    
-        // case ActionType.REMOVE_PRODUCT_SUCCESS:
-        //     return {
-        //         index :  id
-        //     }
-
-        // case ActionType.EDIT_PRODUCT:
-        //     return {
-        //         index :  id
-        //     }
-
-        // case ActionType.EDIT_PRODUCT_SUCCESS:
-        //     const {id} = actions.payload 
-        //     return {
-        //         index :  id
-        //     }
 
         default:
             return state;

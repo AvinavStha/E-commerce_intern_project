@@ -1,28 +1,24 @@
-import { Form, Input, Select, Button, Upload, message, Row } from 'antd';
-import { UploadOutlined } from "@ant-design/icons";
+import { Input, Select, Button, Row, Spin } from 'antd';
+import { CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState, useEffect } from 'react';
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { addProduct, getProduct } from '../../redux/actions/productActions';
+import { addProduct, editProduct, getProduct } from '../../redux/actions/productActions';
 import { toast } from 'react-toastify';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage"
+import { storage } from '../../firebase';
 
 const { Option } = Select;
-const layout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-    },
-};
 
-export const AddEditProductDetail = ({ showForm }) => {
-    const [form] = Form.useForm();
+export const AddEditProductDetail = ({ showForm,
+    setToggleAddEdit,
+    toggleAddEdit,
+    setEditId,
+    editId
+}) => {
     const [state, setState] = useState({
-        // id: Date.now(),
-        image: "",
+        id: Date.now(),
+        image: null,
         name: "",
         description: "",
         brand: "",
@@ -30,23 +26,15 @@ export const AddEditProductDetail = ({ showForm }) => {
         price: "",
         stock: "",
     })
+    const [isLoading, setIsLoading] = useState(false)
 
     const singleProduct = useSelector(state => state.productReducer.single_product)
-    console.log("kjd", singleProduct)
     const dispatch = useDispatch()
     useEffect(() => {
         setState({ ...singleProduct })
-        console.log("state", state)
     }, [singleProduct])
 
-    const { name, brand, type, description, price, stock } = state
-
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
+    const { name, brand, type, description, price, image, stock } = state
 
     const addEditProduct = (e) => {
         e.preventDefault()
@@ -55,6 +43,20 @@ export const AddEditProductDetail = ({ showForm }) => {
                 icon: "😠"
             });
         }
+        else if (!toggleAddEdit) {
+            toast.success("Data edited successfully", {
+                icon: "😄"
+            });
+            dispatch(editProduct(editId, state))
+            showForm(false)
+            setToggleAddEdit(false)
+            setEditId(null)
+            setState({})
+            setTimeout(() => {
+                dispatch(getProduct())
+            }, 2000)
+
+        }
         else {
             toast.success("Data added successfully", {
                 icon: "😄"
@@ -62,6 +64,8 @@ export const AddEditProductDetail = ({ showForm }) => {
             dispatch(addProduct(state))
             showForm(false)
             dispatch(getProduct())
+            setToggleAddEdit(true)
+            setState({})
         }
     }
 
@@ -70,40 +74,77 @@ export const AddEditProductDetail = ({ showForm }) => {
         setState({ ...state, [name]: value })
     }
 
+    const uploadImage = (e) => {
+        setIsLoading(true)
+        const imageFile = e.target.files[0]
+        const storageRef = ref(storage,
+            `product-images/${Date.now()}-${imageFile.name}`
+        )
+        const uploadTask = uploadBytesResumable(storageRef, imageFile)
+        uploadTask.on("state_changed", (snapshot) => {
+            const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log(uploadProgress)
+        }, (error) => {
+            console.log(error)
+            alert("Error while uploading image")
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 3000)
+        }, () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+                setState({ ...state, image: downloadURL })
+                setIsLoading(false)
+            })
+        })
+    }
+
+    const deleteImage = () => {
+        setIsLoading(true);
+        const deleteRef = ref(storage, image);
+        deleteObject(deleteRef).then(() => {
+            setState({ ...state, image: null })
+            setIsLoading(false)
+        })
+    }
+
     const handleReset = () => {
-        console.log("reset")
         setState({})
-    };
-    const beforeUpload = (file) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
-        }
-        return isJpgOrPng || Upload.LIST_IGNORE;
     };
 
     return (
         <form onSubmit={addEditProduct} className='product-form'>
             <Row justify='center'>
-                <Upload name="logo"
-                    listType="picture"
-                    beforeUpload={beforeUpload}
-                    maxCount={1}
-                    onChange={(e) => {
-                        if (Array.isArray(e)) {
-                            return e;
-                        }
-                        return e?.fileList;
-                    }}
-                >
-                    <Button icon={<UploadOutlined />}>Upload Product Image</Button>
-                </Upload>
+                <div className='image'>{
+                    isLoading ? <Spin className='loading' /> : <>
+                        {!image ? <>
+                            <label className='upload'>
+                                <div className="upload-image">
+                                    <CloudUploadOutlined />
+                                    <p style={{ color: 'silver' }}>Upload Product</p>
+                                </div>
+                                <input
+                                    type="file"
+                                    name='image'
+                                    value={image || ""}
+                                    accept="image/*"
+                                    onChange={uploadImage} />
+                            </label>
+                        </> : <>
+                            <div className='upload flex' style={{ position: 'relative' }}>
+                                <img src={image} alt='not found' style={{ maxWidth: '100%' }} />
+                                <DeleteOutlined className='image-delete' style={{ color: 'red' }} onClick={deleteImage} />
+                            </div>
+                        </>}
+                    </>
+                }
+                </div>
             </Row>
             <Row justify='center'>
                 <Input
+                    placeholder='Enter product name'
                     onChange={handleInputChange}
                     name='name'
-                    value={name}
+                    value={name || ""}
                 />
             </Row>
             <Row justify='space-around'>
@@ -114,7 +155,7 @@ export const AddEditProductDetail = ({ showForm }) => {
                     onChange={(e) => { setState({ ...state, brand: e.value }) }}
                     label='brand'
                     name='brand'
-                    value={brand}
+                    value={brand || ""}
                 >
                     <Option value="beer">Beer</Option>
                     <Option value="rum">Rum</Option>
@@ -131,7 +172,7 @@ export const AddEditProductDetail = ({ showForm }) => {
                     onChange={(e) => { setState({ ...state, type: e.value }) }}
                     name='type'
                     label='type'
-                    value={type}
+                    value={type || ""}
                 >
                     <Option value="imported">Imported</Option>
                     <Option value="domestic">Domestic</Option>
@@ -139,179 +180,37 @@ export const AddEditProductDetail = ({ showForm }) => {
             </Row>
             <Row>
                 <Input.TextArea
+                    placeholder='Enter the product description'
                     onChange={handleInputChange}
                     name='description'
-                    value={description} />
+                    value={description || ""} />
             </Row>
             <Row justify='space-around'>
                 <Input style={{ width: 140 }}
+                    placeholder='Price'
                     onChange={handleInputChange}
                     name='price'
                     prefix='Rs'
-                    value={price} />
+                    value={price || ""} />
                 <Input style={{ width: 140 }}
+                    placeholder='Stock'
                     onChange={handleInputChange}
                     name='stock'
-                    value={stock} />
+                    value={stock || ""} />
             </Row>
             <Row justify='space-evenly'>
                 <Button key="reset" onClick={handleReset}>
                     Reset
                 </Button>
                 <Button
+                    disabled={!state}
                     key="submit"
-                    style={{ background: 'green', color: 'white' }}
+                    style={toggleAddEdit ? { background: 'green', color: 'white' } : { background: 'yellow' }}
                     onClick={addEditProduct}
-                // loading={loading}
                 >
-                    Add Products
+                    {toggleAddEdit ? 'Add Product' : 'Edit Product'}
                 </Button>
             </Row>
         </form>
-        // <Form {...layout} form={form} name="control-hooks" onFinish={addEditProduct}>
-        //     <Form.Item
-        //         name="upload"
-        //         label="Upload"
-        //         valuePropName="fileList"
-        //         getValueFromEvent={normFile}
-        //         rules={[
-        //             {
-        //                 required: true,
-        //             }
-        //         ]}
-        //     >
-        //         <Upload name="logo"
-        //             listType="picture"
-        //             beforeUpload={beforeUpload}
-        //             maxCount={1}
-        //             onChange={(e) => {
-        //                 if (Array.isArray(e)) {
-        //                     return e;
-        //                 }
-        //                 return e?.fileList;
-        //             }}
-        //         >
-        //             <Button icon={<UploadOutlined />}>Upload Product Image</Button>
-        //         </Upload>
-        //     </Form.Item>
-        //     <Form.Item
-        //         name="product-name"
-        //         label="Product Name"
-        //         rules={[
-        //             {
-        //                 required: true,
-        //             },
-        //         ]}
-        //     >
-        //         <Input
-        //             onChange={handleInputChange}
-        //             name='name'
-        //             value={name}
-        //         />
-        //     </Form.Item>
-
-        //     <Row justify='space-around'>
-        //         <Form.Item
-        //             name="brand"
-        //             label="Brand"
-        //             rules={[
-        //                 {
-        //                     required: true,
-        //                 },
-        //             ]}
-        //         >
-        //             <Select
-        //                 labelInValue
-        //                 placeholder="Select a brand"
-        //                 style={{ width: 130 }}
-        //                 onChange={(e) => { setState({ ...state, brand: e.value }) }}
-        //                 label='brand'
-        //                 name='brand'
-        //                 value={brand}
-        //             >
-        //                 <Option value="beer">Beer</Option>
-        //                 <Option value="rum">Rum</Option>
-        //                 <Option value="vodka">Vodka</Option>
-        //                 <Option value="whisky">Whiskey</Option>
-        //                 <Option value="wine">Wine</Option>
-        //                 <Option value="brandy">Brandy</Option>
-        //                 <Option value="kodo">Kodo</Option>
-        //             </Select>
-        //         </Form.Item>
-        //         <Form.Item
-        //             name="type"
-        //             label="Type"
-        //         >
-        //             <Select
-        //                 labelInValue
-        //                 placeholder="Select a type of product"
-        //                 style={{ width: 130 }}
-        //                 onChange={(e) => { setState({ ...state, type: e.value }) }}
-        //                 name='type'
-        //                 label='type'
-        //                 value={type}
-        //             >
-        //                 <Option value="imported">Imported</Option>
-        //                 <Option value="domestic">Domestic</Option>
-        //             </Select>
-        //         </Form.Item>
-        //     </Row>
-
-        //     <Form.Item
-        //         name="product-description"
-        //         label="Description"
-        //     >
-        //         <Input.TextArea
-        //             onChange={handleInputChange}
-        //             name='description'
-        //             value={description} />
-        //     </Form.Item>
-
-        //     <Row justify='space-around'>
-        //         <Form.Item
-        //             name="price"
-        //             label="Price"
-        //             rules={[
-        //                 {
-        //                     required: true,
-        //                 },
-        //             ]}
-        //         >
-        //             <Input style={{ width: 140 }}
-        //                 onChange={handleInputChange}
-        //                 name='price'
-        //                 prefix='Rs'
-        //                 value={price} />
-        //         </Form.Item>
-
-        //         <Form.Item
-        //             name="stock"
-        //             label="Stock"
-        //             rules={[
-        //                 {
-        //                     required: true,
-        //                 },
-        //             ]}
-        //         >
-        //             <Input style={{ width: 140 }}
-        //                 onChange={handleInputChange}
-        //                 name='stock'
-        //                 value={stock} />
-        //         </Form.Item>
-        //     </Row>
-        //     <Row justify='space-evenly'>
-        //         <Button key="reset" onClick={handleReset}>
-        //             Reset
-        //         </Button>
-        //         <Button
-        //             key="submit"
-        //             style={{ background: 'green', color: 'white' }}
-        //             onClick={addEditProduct}
-        //         // loading={loading}
-        //         >
-        //             Add Products
-        //         </Button>
-        //     </Row>
-        // </Form>
     );
 };
