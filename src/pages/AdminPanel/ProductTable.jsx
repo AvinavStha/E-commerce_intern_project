@@ -1,4 +1,4 @@
-import { Space, Table } from 'antd';
+import { Space, Spin, Table } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -8,6 +8,7 @@ import { getProduct, deleteProduct, getSingleProduct } from '../../redux/actions
 
 const ProductTable = ({ showForm, setToggleAddEdit, setEditId }) => {
     const products = useSelector(state => state.productReducer.product_details)
+    const loading = useSelector(state => state.productReducer.loading)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -97,7 +98,9 @@ const ProductTable = ({ showForm, setToggleAddEdit, setEditId }) => {
 
     return (
         <>
-            <Table columns={columns} dataSource={product} />
+            {loading ?
+                <Spin size='large' style={{ display: 'flex', justifyContent: 'center' }} /> :
+                <Table columns={columns} dataSource={product} />}
         </>
     )
 };
