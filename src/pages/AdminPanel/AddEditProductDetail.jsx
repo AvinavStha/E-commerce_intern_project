@@ -149,7 +149,7 @@ export const AddEditProductDetail = ({ showForm,
             </Row>
             <Row justify='space-around'>
                 <Select
-                    placeholder="Select a brand"
+                    placeholder='Brand'
                     style={{ width: 130 }}
                     onChange={(e) => { setState({ ...state, brand: e }) }}
                     label='brand'
@@ -165,7 +165,7 @@ export const AddEditProductDetail = ({ showForm,
                     <Option value="kodo">Kodo</Option>
                 </Select>
                 <Select
-                    placeholder="Select a type of product"
+                    placeholder='Type of product'
                     style={{ width: 130 }}
                     onChange={(e) => { setState({ ...state, type: e }) }}
                     name='type'

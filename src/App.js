@@ -18,6 +18,25 @@ import AddToCart from "./pages/UserPanel/AddToCart";
 import {breadcrumbNameMap} from './components/BreadCrumbItem'
 import { AdminLoginPage } from "./pages/AdminPanel/AdminLoginPage";
 import { AdminPage } from './pages/AdminPanel/AdminPage';
+import {Beer} from './pages/UserPanel/Beer/Beer'
+import {BeerDomestic} from './pages/UserPanel/Beer/BeerDomestic'
+import {BeerImported} from './pages/UserPanel/Beer/BeerImported'
+import { Wine } from "./pages/UserPanel/Wine/Wine";
+import {WineDomestic} from './pages/UserPanel/Wine/WineDomestic'
+import {WineImported} from './pages/UserPanel/Wine/WineImported'
+import {Brandy} from './pages/UserPanel/Brandy/Brandy';
+import {BrandyDomestic} from './pages/UserPanel/Brandy/BrandyDomestic'
+import {BrandyImported} from './pages/UserPanel/Brandy/BrandyImported'
+import {Whisky} from './pages/UserPanel/Whiskey/Whisky';
+import {WhiskyDomestic} from './pages/UserPanel/Whiskey/WhiskyDomestic'
+import {WhiskyImported} from './pages/UserPanel/Whiskey/WhiskyImported'
+import {Rum} from './pages/UserPanel/Rum/Rum';
+import {RumDomestic} from './pages/UserPanel/Rum/RumDomestic'
+import {RumImported} from './pages/UserPanel/Rum/RumImported'
+import {Vodka} from './pages/UserPanel/Vodka/Vodka';
+import {VodkaDomestic} from './pages/UserPanel/Vodka/VodkaDomestic'
+import {VodkaImported} from './pages/UserPanel/Vodka/VodkaImported'
+import {Kodo} from './pages/UserPanel/Kodo';
 
 const { Header, Content, Footer} = Layout;
 
@@ -40,7 +59,7 @@ function App() {
     });
     //cleanup
     return () => unsubscribe();
-  }, []);
+  }, [dispatch]);
 
   const location = useLocation();
   const pathSnippets = location.pathname.split('/').filter((i) => i);
@@ -76,13 +95,13 @@ function App() {
   return (
     <>
         <Layout>
-          <Header style={{background:'white'}}>
+          <Header className="header">
             <Navbar />
           </Header>
           
-          <Breadcrumb style={{ padding: '0 50px',background:'white' }}>{breadcrumbItems}</Breadcrumb>
           <ToastContainer/>
-          <Content style={{ padding: '0 50px',background:'white' }}>
+          <Content  className="ant-content">
+            <Breadcrumb className="ant-breadcrumb">{breadcrumbItems}</Breadcrumb>
             <Routes>
               <Route exact path="/" element={<Home />}></Route>
               <Route exact path="/login" element={<Login />}></Route>
@@ -90,10 +109,29 @@ function App() {
               <Route exact path="/register/complete" element={<RegisterComplete />}></Route>
               <Route exact path="/forgot/password" element={<ForgotPassword/>}></Route>
               <Route exact path="/add-to-cart" element={<AddToCart/>}></Route>
+              <Route path="/beer" element={<Beer/>}/>
+              <Route path="/beer/domestic-beer" element={<BeerDomestic/>}/>
+              <Route path="/beer/imported-beer" element={<BeerImported/>}/>
+              <Route path="/rum" element={<Rum/>}/>
+              <Route path="/rum/domestic-rum" element={<RumDomestic/>}/>
+              <Route path="/rum/imported-rum" element={<RumImported/>}/>
+              <Route path="/vodka" element={<Vodka/>}/>
+              <Route path="/vodka/domestic-vodka" element={<VodkaDomestic/>}/>
+              <Route path="/vodka/imported-vodka" element={<VodkaImported/>}/>
+              <Route path="/whisky" element={<Whisky/>}/>
+              <Route path="/whisky/domestic-whisky" element={<WhiskyDomestic/>}/>
+              <Route path="/whisky/imported-whisky" element={<WhiskyImported/>}/>
+              <Route path="/wine" element={<Wine/>}/>
+              <Route path="/wine/domestic-wine" element={<WineDomestic/>}/>
+              <Route path="/wine/imported-wine" element={<WineImported/>}/>
+              <Route path="/brandy" element={<Brandy/>}/>
+              <Route path="/brandy/domestic-brandy" element={<BrandyDomestic/>}/>
+              <Route path="/brandy/imported-brandy" element={<BrandyImported/>}/>
+              <Route path="/kodo" element={<Kodo/>}/>
             </Routes>
           </Content>
           
-          <Footer style={{background:'red'}}>
+          <Footer className="ant-footer">
             <FooterPage/>
           </Footer>
         </Layout>

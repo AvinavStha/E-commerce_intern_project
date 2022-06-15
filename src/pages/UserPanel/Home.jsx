@@ -1,40 +1,69 @@
-import React from "react";
-import { Card } from "antd";
-import bottle from "../../images/1.png"
-import { Button } from "antd";
+import React, { useEffect } from "react";
+import { Col, Row, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment } from "../../redux/actions/actions";
-
-const { Meta } = Card;
+import { Slider } from "./Slider";
+import { getProduct } from '../../redux/actions/productActions';
+import ProductCard from "./ProductCard";
+import { HomeContent } from "./HomeContent";
+import { Link } from "react-router-dom";
+import { ArrowRightOutlined } from '@ant-design/icons'
 
 const Home = () => {
-  const value = useSelector(state => state.incrementDecrement.count)
-  console.log(value)
+  const { product_details, loading } = useSelector(state => state.productReducer)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getProduct())
+  }, [])
 
   return (
     <>
-      <Card
-        className='product-card'
-        hoverable
-        style={{ width: 240 }}
-        cover={<img alt="example" src={bottle} />}
-      >
-        <Meta title="Scapa The Orcadian Glansa 750ML" />
-        <div className="product-info">
-          <div className="price-detail">
-            <div>Price</div>
-            <div>Rs.1050</div>
-          </div>
-          <div className="product-info">
-            <Button type="text" onClick={() => { dispatch(decrement()) }}>-</Button>
-            <input type="text" value={value} onChange={(e) => { console.log('dfdfs') }} />
-            <Button type="text" onClick={() => { dispatch(increment()) }}>+</Button>
-          </div>
-        </div>
+      <Slider />
+      {loading ?
+        <Spin size='large' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} /> :
+        <div className="product">
+          <>
+            <h2>Featured Products</h2>
+            <Row>
+              {product_details.filter(item => item.type === 'imported').map((product, index) =>
+                index < 4 && (
+                  <Col xs={24} sm={12} md={8} lg={6}>
+                    < ProductCard key={product.id}
+                      name={product.name}
+                      image={product.image}
+                      price={product.price}
+                    />
+                  </Col>
+                ))}
+            </Row>
+            <div className="link">
+              <Link to='/feature'>View all<ArrowRightOutlined style={{ paddingLeft: '.6rem' }} /></Link>
+            </div>
+          </>
 
-        <Button type="primary" block className="add-to-cart">Add to Cart</Button>
-      </Card>
+          {HomeContent.map((items) => (
+            <>
+              <h2 style={{ marginTop: '4rem' }}>{items.title}</h2>
+              <Row justify="space-between">
+                {product_details.filter(item => item.brand === `${items.brand}`).map((product, index) =>
+                  index < 4 && (
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      < ProductCard key={product.id}
+                        name={product.name}
+                        image={product.image}
+                        price={product.price}
+                      />
+                    </Col>
+                  ))}
+              </Row>
+              <div className="link">
+                <Link to={items.link}>View all<ArrowRightOutlined style={{ paddingLeft: '.6rem' }} /></Link>
+              </div>
+            </>
+          ))}
+
+        </div>
+      }
     </>
   );
 };
