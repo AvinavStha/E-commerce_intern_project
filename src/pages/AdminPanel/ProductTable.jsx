@@ -13,7 +13,7 @@ const ProductTable = ({ showForm, setToggleAddEdit, setEditId }) => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getProduct())
-    }, [])
+    }, [dispatch])
 
     const productDelete = (id) => {
         if (window.confirm("Are you sure you want to delete contact?")) {

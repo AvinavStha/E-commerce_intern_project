@@ -39,8 +39,8 @@ export const AdminPage = () => {
                             style={{
                                 backgroundColor: '#001529',
                                 color: 'white',
-                                bottom: '50px',
-                                right: '30px',
+                                bottom: '5rem',
+                                right: '1rem',
                                 border: 'none'
                             }}
                             icon={<MenuOutlined style={{ fontSize: '2rem' }} />}
@@ -51,6 +51,7 @@ export const AdminPage = () => {
                         placement="left"
                         onClick={() => setVisible(false)}
                         visible={visible}
+                        className='admin-drawer'
                     >
                         <AdminSider />
                     </Drawer>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu ,Row,Col,Input, Dropdown} from "antd";
 import {
   UserOutlined,
@@ -14,13 +14,38 @@ import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import logo from '../images/drinkitall.png'
 import { HomeContent } from "../pages/UserPanel/HomeContent";
+import { CartDrawer } from "../pages/UserPanel/CartDrawer";
 
 const { Search } = Input;
 
 const { SubMenu, Item } = Menu;
 
+const getLocalStorageCount = ()=>{
+  const itemCount = localStorage.getItem('CartItemCount')
+  if(itemCount){
+    return JSON.parse(itemCount)
+  }else{
+    return []
+  }
+}
+
 const Navbar = () => {
+  const {index} = useSelector(state=>state.incrementDecrement)
+  const value = getLocalStorageCount()
   const [current, setCurrent] = useState("home");
+  const [visible, setVisible] = useState(false);
+
+  useEffect(()=>{
+    localStorage.setItem("CartItemCount", JSON.stringify(index))
+  },[index])
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -102,8 +127,14 @@ const Navbar = () => {
                 </Item>
               </SubMenu>
             )}
-            <Item key="add-to-cart"  className="float-right">
-              <Link to="/add-to-cart"><ShoppingCartOutlined /></Link>
+            <Item key="add-to-cart">
+              <div className="add-cart"onClick={showDrawer}>
+                <div><ShoppingCartOutlined /></div>
+                <input type='text' value={value} className="cart" onChange={()=>{console.log("gf")}}/>
+              </div>  
+              <CartDrawer 
+              visible={visible}
+              onClose={onClose}/>
             </Item>
           </Menu>
         </Col>

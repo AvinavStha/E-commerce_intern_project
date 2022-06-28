@@ -3,7 +3,7 @@ export const breadcrumbNameMap = {
     '/register': 'Register',
     '/register/complete': 'Register Complete',
     '/add-to-cart': 'Your Card',
-    '/feature':'Feature Products',
+    '/feature-product':'Feature Products',
     '/beer':'Beer',
     '/beer/domestic-beer':'Domestic Beer',
     '/beer/imported-beer':'Imported Beer',

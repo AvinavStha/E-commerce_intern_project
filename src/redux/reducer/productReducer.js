@@ -3,6 +3,7 @@ import { ActionType } from "../actions/ActionType";
 const initialState = {
     product_details :[],
     single_product:{},
+    cart_item:[],
     loading:false,
     error:null
 }
@@ -72,6 +73,13 @@ export const productReducer = (state = initialState ,actions)=>{
                 ...state,
                 loading:false,
                 error: actions.payload 
+            }
+
+        case ActionType.ITEM_TO_CART:
+            return{
+                ...state,
+                loading:false,
+                cart_item: actions.payload    
             }
 
         default:

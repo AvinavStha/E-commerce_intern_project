@@ -1,13 +1,17 @@
 import React from 'react'
 import { Card, Button } from 'antd'
-import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment } from "../../redux/actions/actions";
+import { useDispatch, useSelector } from "react-redux"
+import { decrement, increaseCart, increment } from "../../redux/actions/actions"
+import { toast } from 'react-toastify';
+import { itemToCart } from '../../redux/actions/productActions';
 
 const { Meta } = Card;
 
-export default function ProductCard({ name, image, price }) {
-    const value = useSelector(state => state.incrementDecrement.count)
+export default function ProductCard({ product }) {
+    const { count, index } = useSelector(state => state.incrementDecrement)
+    const { cart_item } = useSelector(state => state.productReducer)
 
+    const { image, name, price } = product
     const dispatch = useDispatch()
     return (
         <Card
@@ -24,12 +28,24 @@ export default function ProductCard({ name, image, price }) {
                 </div>
                 <div className="product-info">
                     <Button type="text" onClick={() => { dispatch(decrement()) }}>-</Button>
-                    <input type="text" value={value} onChange={(e) => { console.log('dfdfs') }} />
+                    <input type="text" value={count} onChange={(e) => { console.log('dfdfs') }} />
                     <Button type="text" onClick={() => { dispatch(increment()) }}>+</Button>
                 </div>
             </div>
 
-            <Button type="primary" block className="add-to-cart">Add to Cart</Button>
-        </Card>
+            <Button type="primary" block
+                className="add-to-cart"
+                onClick={() => {
+                    localStorage.setItem("CartItemCount", JSON.stringify(index))
+                    dispatch(increaseCart())
+                    const item = [...cart_item, product]
+                    dispatch(itemToCart(item))
+                    localStorage.setItem("CartItems", JSON.stringify(item))
+                    toast.success("Product added to cart", {
+                        icon: "😄"
+                    });
+                }}
+            >Add to Cart</Button>
+        </Card >
     )
 }

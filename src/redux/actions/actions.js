@@ -19,3 +19,12 @@ export const toggleContent = (id) => {
   }
 }
 
+export const increaseCart = (id) => {
+  return {
+      type :ActionType.INCREASE_CART_ITEM,
+      payload: id
+  }
+}
+
+
+

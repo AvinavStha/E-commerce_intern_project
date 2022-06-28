@@ -64,6 +64,14 @@ const editProductFailed = () => ({
     type :ActionType.EDIT_PRODUCT_FAILED
 })
 
+export const itemToCart = (product) => {
+    return{
+        type : ActionType.ITEM_TO_CART,
+        payload: product
+  
+  }
+}
+
 export const getProduct = ()=> async (dispatch)=>{
     dispatch(getProductsStart())
     
@@ -124,3 +132,4 @@ export const editProduct = (id,product)=> async (dispatch)=>{
         dispatch(editProductFailed(error))
     }
 }
+

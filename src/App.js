@@ -37,6 +37,7 @@ import {Vodka} from './pages/UserPanel/Vodka/Vodka';
 import {VodkaDomestic} from './pages/UserPanel/Vodka/VodkaDomestic'
 import {VodkaImported} from './pages/UserPanel/Vodka/VodkaImported'
 import {Kodo} from './pages/UserPanel/Kodo';
+import { FeatureProducts } from "./pages/UserPanel/FeatureProducts";
 
 const { Header, Content, Footer} = Layout;
 
@@ -109,6 +110,7 @@ function App() {
               <Route exact path="/register/complete" element={<RegisterComplete />}></Route>
               <Route exact path="/forgot/password" element={<ForgotPassword/>}></Route>
               <Route exact path="/add-to-cart" element={<AddToCart/>}></Route>
+              <Route path="feature-product" element={<FeatureProducts/>}/>
               <Route path="/beer" element={<Beer/>}/>
               <Route path="/beer/domestic-beer" element={<BeerDomestic/>}/>
               <Route path="/beer/imported-beer" element={<BeerImported/>}/>
